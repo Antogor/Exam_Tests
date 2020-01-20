@@ -105,9 +105,6 @@ int ft_putnbr_master(int d, int spaces, int precision)
 	if (precision > count)
 	{
 		total = precision - count;
-	}
-	if (total > 0)
-	{
 		if (spaces > count + total)
 			total2 = spaces - (count + total);
 	}
@@ -177,9 +174,6 @@ int ft_puthexa_master(unsigned int x, int spaces, int precision)
 	if (precision > l)
 	{
 		total = precision - l;
-	}
-	if (total > 0)
-	{
 		if (spaces > l + total)
 			total2 = spaces - (l + total);
 	}
@@ -280,7 +274,7 @@ int main ()
 	int l;
 	int q;
 
-	l = ft_printf("%.d\n", 20);
-	q = printf("%.d\n", 20);
+	l = ft_printf("%20.5d\n", 20);
+	q = printf("%02.5d\n", 20);
 	printf("MIO: %d ORIGINAL: %d\n", l, q);
 }
