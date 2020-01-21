@@ -111,8 +111,7 @@ int get_next_line(char **line)
 int main (int argc, char **argv)
 {
 	int l;
-	char line[0][200] =	"hola que pasa";
-	l = get_next_line(line);
+	l = get_next_line(argv);
 	//	printf("%d\n", l);
 	l = get_next_line(argv);
 //	printf("%d\n", l);
