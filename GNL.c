@@ -1,13 +1,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 
-#define BUFFER_SIZE 42
+#define BUFFER_SIZE 100
 
 int ft_strlen_until(char *s, char c)
 {
 	int l = 0;
-	while(s[l] != '\0')
+	while(s[l])
 	{
 		if (s[l] == c)
 			return(l);
@@ -45,19 +46,19 @@ char *ft_substr(char *s, int start, int len)
 {
 	char *new;
 	int l = 0;
-
 	if (start > ft_strlen_until(s, '\0'))
 		return(NULL);
 	if (!s)
 		return(NULL);
 	new = malloc(sizeof(char) * len + 1);
-	while (len > 0)
+	while (s[start] && len > 0)
 	{
 		new[l] = s[start];
 		l++;
 		start++;
 		len--;
 	}
+	new[l] = '\0';
 	return(new);
 }
 
@@ -77,7 +78,7 @@ static void *ft_calloc(int size, int count)
 
 }
 
-int get_next_line(char **line)
+int get_next_line(char **line, int fd)
 {
 	static char *str;
 	int br;
@@ -88,20 +89,26 @@ int get_next_line(char **line)
 		return(-1);
 	if (!(str = ft_calloc(sizeof(char), 1)))
 		return(-1);
-	while(ft_strlen_until(str, '\n') < 0 && (br = read(0, buff, BUFFER_SIZE)) > 0)
+	while(ft_strlen_until(str, '\n') < 0 && (br = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
+		
 		buff[br] = '\0';
+		
 		str = ft_strjoin(str, buff);
+		
 	}
 	*line = ft_substr(str, 0, ft_strlen_until(str, '\n'));
-	printf("STR: %s\n", str);
 	if (ft_strlen_until(str, '\n') < 0)
 	{
+		*line = ft_substr(str, 0, ft_strlen_until(str, '\0'));
 		free(str);
+		str= NULL;
 		return(0);
 	}
 	tmp = str;
+	free(str);
 	str = ft_substr(tmp, ft_strlen_until(tmp, '\n') + 1, ft_strlen_until(tmp, '\0'));
+	printf("%s\n", str);
 	free(tmp);
 	return(1);
 
@@ -111,11 +118,17 @@ int get_next_line(char **line)
 int main (int argc, char **argv)
 {
 	int l;
-	l = get_next_line(argv);
-	//	printf("%d\n", l);
-	l = get_next_line(argv);
+	char *line;
+	int fd;
+	fd = open("text.txt", O_RDONLY);
+	l = get_next_line(&line, fd);
+		printf("PRIMERA: %d\n", l);
+		printf("PRIMERA: %s\n", line);
+	l = get_next_line(&line, fd);
+		printf("SEGUNDA: %d\n", l);
+		printf("SEGUNDA: %s\n", line);
 //	printf("%d\n", l);
-	l = get_next_line(argv);
+//	l = get_next_line(&line, fd);
 //	printf("%d\n", l);
 
 }
