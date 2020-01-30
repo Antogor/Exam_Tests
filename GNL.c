@@ -97,7 +97,7 @@ int get_next_line(char **line)
 		str = ft_strjoin(str, buff);
 		
 	}
-	*line = ft_substr(str, 0, ft_strlen_until(str, '\n'));
+	*line = ft_substr(str, 0, ft_strlen_until(str, '\n') - 1);
 	if (ft_strlen_until(str, '\n') < 0)
 	{
 		*line = ft_substr(str, 0, ft_strlen_until(str, '\0'));
