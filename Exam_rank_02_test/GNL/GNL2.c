@@ -25,7 +25,7 @@ char *ft_substr(char *s, int start, int len)
 	if (start > ft_strlen_until(s, '\0'))
 			return(NULL);
 	new = malloc(sizeof(char) * len + 1);
-	while (len > 0)
+	while (s[start] && len > 0)
 	{
 		new[l] = s[start];
 		l++;
@@ -85,7 +85,7 @@ int get_next_line(char **line)
 	   return(-1);
 	if (!(s = ft_memzero(sizeof(char), 1)))
 		return(-1);
-	while((ft_strlen(s, '\n') < 0) && (br = (read(0, buff, BUFFER_SIZE))) > 0)
+	while(ft_strlen_until(s, '\n') < 0 && (br = read(0, buff, BUFFER_SIZE)) > 0)
 	{
 		buff[br] = '\0';
 		s = ft_strjoin(s, buff);
@@ -94,13 +94,21 @@ int get_next_line(char **line)
 	if (ft_strlen_until(s, '\n') < 0)
 	{
 		free(s);
-		s = NULL;
 		return(0);
 	}
 	tmp = s;
-	s = ft_substr(s, ft_strlen(s, '\n') + 1, ft_strlen(s, '\0'));
+	s = ft_substr(s, ft_strlen_until(s, '\n') + 1, ft_strlen_until(s, '\0'));
 	free(tmp);
 	tmp = NULL;
 	return(1);
 }
 
+int main(int argc, char **argv)
+{
+    int l;
+    char *a;
+
+    l = get_next_line(&a);
+    printf("L = %d A = %s\n", l, a);
+    return(0);
+}
