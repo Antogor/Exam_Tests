@@ -38,6 +38,8 @@ char *ft_strjoin(char *s1, char *s2)
 		new[l + q] = s2[q];
 		q++;
 	}
+	free(s1);
+	s1 = NULL;
 	new[l + q] = '\0';
 	return(new);
 }
@@ -93,7 +95,6 @@ int get_next_line(char **line)
 	{
 		
 		buff[br] = '\0';
-		
 		str = ft_strjoin(str, buff);
 		
 	}
@@ -108,12 +109,13 @@ int get_next_line(char **line)
 	tmp = str;
 	free(str);
 	str = ft_substr(tmp, ft_strlen_until(tmp, '\n') + 1, ft_strlen_until(tmp, '\0'));
+	free(tmp);
+	tmp = NULL;
 	printf("%s\n", str);
 	free(tmp);
 	return(1);
 
 }
-
 
 int main()
 {
@@ -122,8 +124,13 @@ int main()
 
     l = get_next_line(&a);
 	printf("L = %d A = %s\n", l, a);
+	free(a);
+	a = NULL;
 	l = get_next_line(&a);
     printf("L = %d A = %s\n", l, a);
+	free(a);
+	a = NULL;
+	getchar();
     return(0);
 }
 
