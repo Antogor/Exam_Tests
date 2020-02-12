@@ -3,11 +3,15 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#define BUFFER_SIZE 100
+#define BUFFER_SIZE 64
 
 int ft_strlen_until(char *s, char c)
 {
 	int l = 0;
+	if (!s)
+	{
+		return (-1);
+	}
 	while(s[l])
 	{
 		if (s[l] == c)
@@ -38,20 +42,14 @@ char *ft_strjoin(char *s1, char *s2)
 		new[l + q] = s2[q];
 		q++;
 	}
-	free(s1);
-	s1 = NULL;
 	new[l + q] = '\0';
-	return(new);
+	return (new);
 }
 
 char *ft_substr(char *s, int start, int len)
 {
 	char *new;
 	int l = 0;
-	if (start > ft_strlen_until(s, '\0'))
-		return(NULL);
-	if (!s)
-		return(NULL);
 	new = malloc(sizeof(char) * len + 1);
 	while (s[start] && len > 0)
 	{
@@ -64,20 +62,48 @@ char *ft_substr(char *s, int start, int len)
 	return(new);
 }
 
-static void *ft_calloc(int size, int count)
+char *ft_strdup(char *s1)
 {
-	void *meme;
-	int total;
+	int len;
+	char *s2;
 
-	total = size * count;
-	meme = malloc (total);
-	while(total > 0)
+	len = 0;
+	while (s1[len])
 	{
-		*(unsigned char*)meme++ = 0;
-		total--;
+		len++;
 	}
-	return(meme - size * count);
+	s2 = malloc(sizeof(char) * len + 1);
+	len = 0;
+	while (s1[len])
+	{
+		s2[len] = s1[len];
+		len++;
+	}
+	s2[len] = '\0';
+	return (s2);	
+}
 
+int new_line(char **line, char **str)
+{
+	char *tmp;
+	int len;
+
+	len = ft_strlen_until(*str, '\n');
+	if ((*str)[len] == '\n')
+	{
+	*line = ft_substr(*str, 0, len);
+	tmp = ft_strdup(&((*str)[len + 1]));
+	free(*str);
+	*str = tmp;
+	}
+	else
+	{
+		*line = ft_strdup(*str);
+		free(*str);
+		*str = NULL;
+		return(0);
+	}
+	return(1);
 }
 
 int get_next_line(char **line)
@@ -85,52 +111,32 @@ int get_next_line(char **line)
 	static char *str;
 	int br;
 	char buff[BUFFER_SIZE + 1];
-	char *tmp;
+	char *aux;
 	
 	if (!line)
-		return(-1);
-	if (!(str = ft_calloc(sizeof(char), 1)))
-		return(-1);
-	while(ft_strlen_until(str, '\n') < 0 && (br = read(0, buff, BUFFER_SIZE)) > 0)
+		return (-1);
+	while (ft_strlen_until(str, '\n') < 0)
 	{
-		
+		br = read(0, buff, BUFFER_SIZE);
+		if (br < 0)
+			return (-1);
+		if (br == 0)
+			break;
 		buff[br] = '\0';
-		str = ft_strjoin(str, buff);
-		
+		if (!str)
+			str = ft_strdup(buff);
+		else
+		{
+			aux = ft_strjoin(str, buff);
+			free(str);
+			str = aux;
+		}
 	}
-	*line = ft_substr(str, 0, ft_strlen_until(str, '\n'));
-	if (ft_strlen_until(str, '\n') < 0)
+	if (br == 0 && !str)
 	{
-		*line = ft_substr(str, 0, ft_strlen_until(str, '\0'));
-		free(str);
-		str= NULL;
-		return(0);
+		*line = ft_strdup("");
+		return (0);
 	}
-	tmp = str;
-	free(str);
-	str = ft_substr(tmp, ft_strlen_until(tmp, '\n') + 1, ft_strlen_until(tmp, '\0'));
-	free(tmp);
-	tmp = NULL;
-	printf("%s\n", str);
-	free(tmp);
-	return(1);
-
+	else
+		return (new_line(line, &str));
 }
-
-int main()
-{
-    int l;
-    char *a;
-
-    l = get_next_line(&a);
-	printf("L = %d A = %s\n", l, a);
-	free(a);
-	a = NULL;
-	l = get_next_line(&a);
-    printf("L = %d A = %s\n", l, a);
-	free(a);
-	a = NULL;
-	system("leaks gnl");
-    return(0);
-}
-
