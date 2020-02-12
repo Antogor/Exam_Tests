@@ -33,24 +33,24 @@ void ft_putnbr(int d)
 
 char *ft_puthexa(unsigned int x)
 {
-	int a = 0;
+	unsigned int a = 0;
 	char *hexa;
 	int l = 0;
 	a = x;
 	while (a != 0)
 	{
-		a = x / 16;
+		a = a / 16;
+		l++;
 	}
-	l = a;
 	hexa = malloc(sizeof(char) * l);
 	hexa[l--] = '\0';
 	while (x != 0)
 	{
-		a = x;
-		if (x > 10)
-			hexa[l--] = a % 16 + 'W';
+		a = x % 16;
+		if (a > 10)
+			hexa[l--] = a + 'W';
 		else
-			hexa[l--] = a % 16 + 48;
+			hexa[l--] = a + '0';
 		x = x / 16;
 	}
 	return(hexa);
@@ -136,6 +136,7 @@ int ft_putnbr_hexa(unsigned int x, int spaces, int precision)
 	}
 	ft_putstr(hexa);
 	free(hexa);
+	hexa = NULL;
 	return(l);
 }
 
@@ -152,7 +153,7 @@ int ft_putstr_master(char *s, int spaces, int precision)
 	total = precision;
 	if (total > 0)
 	{
-		if (spaces < total)
+		if (spaces > total)
 			total2 = spaces - total;
 	}
 	else
@@ -241,6 +242,9 @@ int ft_printf(const char *s, ...)
 int main()
 {
 	int l;
-	l = ft_printf("%.50d", -20);
+	int q;
+	l = ft_printf("%10.1s\n", "hola");
+	q = printf("%10.1s\n", "hola");
+	printf("MINE: %d, ORI: %d", l, q);
 	return (0);
 }
