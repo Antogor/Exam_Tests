@@ -50,6 +50,8 @@ char *ft_substr(char *s, int start, int len)
 {
 	char *new;
 	int l = 0;
+	if (start > ft_strlen_until(s, '\0'))
+		return (NULL);
 	new = malloc(sizeof(char) * len + 1);
 	while (s[start] && len > 0)
 	{
@@ -65,22 +67,18 @@ char *ft_substr(char *s, int start, int len)
 char *ft_strdup(char *s1)
 {
 	int len;
-	char *s2;
+	char *new;
 
+	len = ft_strlen_until(s1, '\0');
+	new = malloc(sizeof(char) * len + 1);
 	len = 0;
 	while (s1[len])
 	{
+		new[len] = s1[len];
 		len++;
 	}
-	s2 = malloc(sizeof(char) * len + 1);
-	len = 0;
-	while (s1[len])
-	{
-		s2[len] = s1[len];
-		len++;
-	}
-	s2[len] = '\0';
-	return (s2);	
+	new[len] = '\0';
+	return (new);	
 }
 
 int new_line(char **line, char **str)
@@ -91,10 +89,10 @@ int new_line(char **line, char **str)
 	len = ft_strlen_until(*str, '\n');
 	if ((*str)[len] == '\n')
 	{
-	*line = ft_substr(*str, 0, len);
-	tmp = ft_strdup(&((*str)[len + 1]));
-	free(*str);
-	*str = tmp;
+		*line = ft_substr(*str, 0, len);
+		tmp = ft_strdup(&((*str)[len + 1]));
+		free(*str);
+		*str = tmp;
 	}
 	else
 	{
