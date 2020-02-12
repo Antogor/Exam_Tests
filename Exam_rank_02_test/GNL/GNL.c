@@ -130,7 +130,7 @@ int main()
     printf("L = %d A = %s\n", l, a);
 	free(a);
 	a = NULL;
-	getchar();
+	system("leaks gnl");
     return(0);
 }
 

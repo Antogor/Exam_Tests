@@ -47,14 +47,15 @@ char *ft_strjoin(char *s1, char *s2)
 	new = malloc(sizeof(char) * total + 1);
 	while(s1[l] != '\0')
 	{
-		new[l] == s1[l];
+		new[l] = s1[l];
 		l++;
 	}
 	while(s2[q] != '\0')
 	{
-		new[l + q] == s1[q];
+		new[l + q] = s1[q];
 		q++;
 	}
+	free(s1);
 	new[l + q] = '\0';
 	return(new);
 }
@@ -110,5 +111,6 @@ int main(int argc, char **argv)
 
     l = get_next_line(&a);
     printf("L = %d A = %s\n", l, a);
+	system("leaks gnl");
     return(0);
 }
