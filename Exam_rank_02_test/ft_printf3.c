@@ -246,5 +246,6 @@ int main()
 	l = ft_printf("%10.1s\n", "hola");
 	q = printf("%10.1s\n", "hola");
 	printf("MINE: %d, ORI: %d", l, q);
+	system("leaks printf");
 	return (0);
 }
