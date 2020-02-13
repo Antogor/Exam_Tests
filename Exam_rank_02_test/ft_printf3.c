@@ -25,9 +25,9 @@ void ft_putnbr(int d)
 	{
 		a = d / 10 + 48;
 		write (1, &a, 1);
-		d = d / 10;
+		d = d % 10;
 	}
-	a = d / 10 + 48;
+	a = d + 48;
 	write(1, &a, 1);
 }
 
@@ -35,6 +35,7 @@ char *ft_puthexa(unsigned int x)
 {
 	unsigned int a = 0;
 	char *hexa;
+	char base[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 	int l = 0;
 	a = x;
 	while (a != 0)
@@ -42,17 +43,20 @@ char *ft_puthexa(unsigned int x)
 		a = a / 16;
 		l++;
 	}
-	hexa = malloc(sizeof(char) * l);
+	hexa = malloc(sizeof(char) * l + 1);
 	hexa[l--] = '\0';
+	if (x == 0)
+		hexa[0] = '0';
 	while (x != 0)
 	{
 		a = x % 16;
 		if (a > 10)
-			hexa[l--] = a + 'W';
+			hexa[l--] = base[a];
 		else
-			hexa[l--] = a + '0';
+			hexa[l--] = base[a];
 		x = x / 16;
 	}
+	
 	return(hexa);
 }
 
@@ -243,9 +247,9 @@ int main()
 {
 	int l;
 	int q;
-	l = ft_printf("%10.1s\n", "hola");
-	q = printf("%10.1s\n", "hola");
-	printf("MINE: %d, ORI: %d", l, q);
+	l = ft_printf("Hexadecimal for %d is %x\n", 42, -42);
+	q = printf("Hexadecimal for %d is %x\n", 42, -42);
+	printf("MINE: %d, ORI: %d\n", l, q);
 	system("leaks printf");
 	return (0);
 }
