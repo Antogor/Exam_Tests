@@ -50,10 +50,7 @@ char *ft_puthexa(unsigned int x)
 	while (x != 0)
 	{
 		a = x % 16;
-		if (a > 10)
-			hexa[l--] = base[a];
-		else
-			hexa[l--] = base[a];
+		hexa[l--] = base[a];
 		x = x / 16;
 	}
 	
@@ -125,7 +122,10 @@ int ft_putnbr_hexa(unsigned int x, int spaces, int precision)
 			total2 = spaces - (total + len);
 	}
 	else
-		total2 = spaces - len;
+	{
+		if (spaces > len)
+			total2 = spaces - len;
+	}
 	while (total2 > 0)
 	{
 		write (1, " ", 1);
@@ -171,7 +171,7 @@ int ft_putstr_master(char *s, int spaces, int precision)
 	if  (total > 0)
 	{
 		write(1, s, total);
-		l++;
+		l += total;
 	}
 	else
 	{
@@ -247,9 +247,14 @@ int main()
 {
 	int l;
 	int q;
-	l = ft_printf("Hexadecimal for %d is %x\n", 42, -42);
-	q = printf("Hexadecimal for %d is %x\n", 42, -42);
+	int z = 42;
+	while (z > -42)
+	{
+		l = ft_printf("MIO: %1x\n", z);
+		q = printf("ORI: %1x\n", z);
+		z--;
+	}
 	printf("MINE: %d, ORI: %d\n", l, q);
-	system("leaks printf");
+//	system("leaks printf");
 	return (0);
 }
