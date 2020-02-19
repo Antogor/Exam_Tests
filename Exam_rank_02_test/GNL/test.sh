@@ -3,7 +3,7 @@
 set -e
 
 cd $(dirname $0)
-gcc main1.c GNL2.c -o a.out || (echo COMPILATION FAILED && exit 1)
+gcc main1.c GNL3.c -o a.out || (echo COMPILATION FAILED && exit 1)
 echo ">>>>>>>>>>> Read main1.c"
 ./a.out < main1.c > yours || (echo EXECUTION FAILED && exit 1)
 ./test.out < main1.c > ours
@@ -42,7 +42,7 @@ diff yours ours || (echo FAILED && exit 1)
 rm -f lol
 rm -f lol1
 echo ">>>>>>>>>>> Sequential Read"
-gcc main2.c GNL2.c -o a.out
+gcc main2.c GNL3.c -o a.out
 gcc main2_generator.c -o gen.out
 ./gen.out > ours
 ./a.out > yours || (echo EXECUTION FAILED && exit 1)
