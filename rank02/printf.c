@@ -116,7 +116,12 @@ int put_nb(int nb, int *l, int spaces, int precision)
 		}
 	}
 	else
-		total2 = spaces - len;
+	{
+		if (n == '-')
+			total2 = spaces - len - 1;
+		else
+			total2 = spaces - len;
+	}
 	while (total2 > 0)
 	{
 		write (1, " ", 1);
@@ -169,6 +174,42 @@ int put_hex(unsigned int nb, int *l, int spaces, int precision)
 	return (0);
 }
 
+int put_str(char *s, int *l, int spaces, int precision)
+{
+	int total = 0;
+	int total2 = 0;
+	int len;
+
+	len = ft_strlen(s);
+	if (precision > len)
+		precision = 0;
+	total = precision;
+	if (total > 0)
+	{
+		if (spaces > total)
+			total2 = spaces - total;
+	}
+	else
+		total2 = spaces - len;
+	while (total2 > 0)
+	{
+		write (1, " ", 1);
+		*l += 1;
+		total2--;
+	} 
+	if (total > 0)
+	{
+		write(1, s, total);
+		*l += total;
+	}
+	else
+	{
+		write(1, s, len);
+		*l += len;
+	}
+	return (0);
+}
+
 int	ft_printf(char *s, ...)
 {
 	va_list args;
@@ -205,8 +246,12 @@ int	ft_printf(char *s, ...)
 					p.precision = p.precision * 10 + (s[l] - 48);
 					l++;
 				}
+				if (p.precision <= 0)
+					return (-1);
 			}
-			if (s[l] == 'd')
+			if (s[l] != 'd' && s[l] != 'x' && s[l] != 's')
+				return (-1);
+			else if (s[l] == 'd')
 			{
 				l++;
 				put_nb(va_arg(args, int), &p.len, p.spaces, p.precision);
@@ -219,7 +264,7 @@ int	ft_printf(char *s, ...)
 			else if (s[l] == 's')
 			{
 				l++;
-				//put_nb(va_arg(args, int), &p.len);
+				put_str(va_arg(args, char *), &p.len, p.spaces, p.precision);
 			}
 			p.spaces = 0;
 			p.precision = 0;
@@ -235,11 +280,12 @@ int main (void)
 	int m;
 	int o;
 
-	nb = -4231334;
-	m = ft_printf("DEC_ORI: %25.16d HEX_MIO: %25.16x\n", nb, nb);
-	o = printf("DEC_ORI: %25.16d HEX_ORI: %25.16x\n", nb, nb);
-//	m = ft_printf("%5.2d\n", nb);
-//	o = printf("%5.2d\n", nb);
+//	nb = -4231334;
+	nb = -4;
+	m = ft_printf("DEC_MIO: %25.16d HEX_MIO: %25.16x STR_MIO: %.8s\n", nb, nb, "hola");
+	o = printf("DEC_ORI: %25.16d HEX_ORI: %25.16x STR_ORI: %.8s\n", nb, nb, "hola");
+//	m = ft_printf("%3d\n", nb);
+//	o = printf("%3d\n", nb);
 	printf("MIO: %d ORI: %d\n", m, o);
 	return (0);
 }
